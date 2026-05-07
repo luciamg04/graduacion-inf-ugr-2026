@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invitación Graduación - Ingeniería Informática UGR</title>
+    <!-- Favicon (Gorrito de graduación en formato SVG) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23eab308'%3E%3Cpath d='M11.7 2.805a.75.75 0 01.6 0A60.65 60.65 0 0122.83 8.72a.75.75 0 01-.231 1.337 49.949 49.949 0 00-9.902 3.912l-.003.002c-.114.06-.227.119-.34.18a.751.751 0 01-.707 0A50.88 50.88 0 007.5 12.173v-.224c0-.131.067-.248.172-.311a54.615 54.615 0 014.653-2.52.75.75 0 00-.65-1.352 56.123 56.123 0 00-4.78 2.589 1.858 1.858 0 00-.859 1.228 49.803 49.803 0 00-4.634-1.527.75.75 0 01-.231-1.337A60.653 60.653 0 0111.7 2.805z' /%3E%3Cpath d='M13.06 15.473a48.45 48.45 0 017.666-3.282c.134 1.414.22 2.843.255 4.284a.75.75 0 01-.46.711 47.87 47.87 0 00-8.105 4.342.75.75 0 01-.832 0 47.87 47.87 0 00-8.104-4.342.75.75 0 01-.461-.71c.035-1.442.121-2.87.255-4.286A48.4 48.4 0 016 13.18v1.27a1.5 1.5 0 00-.14 2.508c-.09.38-.222.753-.397 1.11.452.213.901.434 1.346.66a6.727 6.727 0 00.551-1.607 1.5 1.5 0 00.14-2.67v-.645a48.549 48.549 0 013.44 1.667 2.25 2.25 0 002.12 0z' /%3E%3Cpath d='M4.462 19.462c.42-.419.753-.89 1-1.395.453.214.902.435 1.347.662a6.742 6.742 0 01-1.286 1.794.75.75 0 01-1.06-1.06z' /%3E%3C/svg%3E">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=JetBrains+Mono:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ugr: '#D50032', // Rojo UGR
+                        dark: '#0a0f18',
+                        panel: 'rgba(17, 25, 40, 0.75)',
+                        primary: '#4ade80', // Verde terminal
+                        accent: '#60a5fa'  // Azul tech
+                    },
+                    fontFamily: {
+                        serif: ['Cinzel', 'serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                        sans: ['Montserrat', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'bounce-slight': 'bounceSlight 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        bounceSlight: {
+                            '0%, 100%': { transform: 'translateY(0) rotate(15deg)' },
+                            '50%': { transform: 'translateY(-5px) rotate(18deg)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #050810;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        
+        /* Binary background effect */
+        #binary-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            opacity: 0.05;
+            color: #4ade80;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .glass-card {
+            background: rgba(13, 17, 23, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 40px rgba(96, 165, 250, 0.1);
+        }
+
+        .typewriter-text {
+            overflow: hidden;
+            border-right: .15em solid #4ade80;
+            white-space: nowrap;
+            margin: 0 auto;
+            letter-spacing: .15em;
+            animation: typing 3s steps(40, end), blink-caret .75s step-end infinite;
+        }
+
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #4ade80; }
+        }
+
+        .gold-gradient {
+            background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Custom scrollbar para los recuadros de código */
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(96, 165, 250, 0.3);
+            border-radius: 4px;
+        }
+        .custom-scrollbar:hover::-webkit-scrollbar-thumb {
+            background: rgba(96, 165, 250, 0.6);
+        }
+
+        /* --- Animación del Sobre --- */
+        #envelope {
+            perspective: 1000px;
+        }
+        .flap-open {
+            transform: rotateX(180deg);
+        }
+        #envelope-screen {
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .envelope-out {
+            opacity: 0;
+            transform: translateY(100px);
+            pointer-events: none;
+        }
+        
+        #main-wrapper {
+            opacity: 0;
+            transform: scale(0.95) translateY(20px);
+            transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+        #main-wrapper.reveal {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-gray-200 font-sans flex flex flex-col p-4 sm:p-8">
+    
+    <!-- Envelope Overlay -->
+    <div id="envelope-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-[#050810]">
+        <div id="envelope" class="relative w-80 h-56 sm:w-96 sm:h-64 cursor-pointer transition-transform hover:scale-105" onclick="openEnvelope()">
+            
+            <!-- Interior del sobre -->
+            <div class="absolute inset-0 bg-[#e8e4d8] rounded-md shadow-[0_0_30px_rgba(212,175,55,0.15)] overflow-hidden border border-[#d4af37] z-10">
+                <!-- Tarjeta asomando -->
+                <div id="card-preview" class="absolute top-10 left-4 right-4 bottom-0 bg-gray-900 border-t border-x border-gray-700 rounded-t-lg transition-transform duration-700 flex flex-col items-center pt-6 z-15 shadow-2xl">
+                    <p class="font-mono text-accent text-xs">&lt; Class of 2026 /&gt;</p>
+                    <p class="font-serif text-yellow-500 font-bold mt-2 text-sm text-center leading-tight">Ingeniería<br>Informática</p>
+                </div>
+            </div>
+            
+            <!-- Frontal del sobre (Solapas izquierda, derecha e inferior) -->
+            <div class="absolute inset-0 z-20 pointer-events-none rounded-md overflow-hidden">
+                <!-- Solapa inferior -->
+                <div class="absolute inset-0" style="clip-path: polygon(0 0, 50% 60%, 100% 0, 100% 100%, 0 100%); background: #fdfbf7;"></div>
+                <!-- Laterales -->
+                <div class="absolute top-0 left-0 w-full h-full" style="clip-path: polygon(0 0, 50% 60%, 0 100%); background: #f3efe6;"></div>
+                <div class="absolute top-0 right-0 w-full h-full" style="clip-path: polygon(100% 0, 50% 60%, 100% 100%); background: #f3efe6;"></div>
+                <!-- Borde dorado exterior -->
+                <div class="absolute inset-0 border-b border-l border-r border-[#d4af37] rounded-b-md"></div>
+                <!-- Contornos dorados interiores dibujados con SVG para limpieza perfecta -->
+                <svg class="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="0" y1="0" x2="50%" y2="60%" stroke="#d4af37" stroke-width="1.5"/>
+                    <line x1="100%" y1="0" x2="50%" y2="60%" stroke="#d4af37" stroke-width="1.5"/>
+                </svg>
+            </div>
+            
+            <!-- Solapa Superior (La que se abre) -->
+            <div id="envelope-flap" class="absolute top-0 left-0 w-full h-full z-30 origin-top transition-transform duration-700 ease-in-out pointer-events-none">
+                <div class="w-full h-full bg-[#faf8f5] rounded-t-md border-t border-x border-[#d4af37] shadow-lg" style="clip-path: polygon(0 0, 100% 0, 50% 60%);"></div>
+                <!-- Borde dorado de la V de la solapa -->
+                <svg class="absolute inset-0 w-full h-full drop-shadow-md" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="0" y1="0" x2="50%" y2="60%" stroke="#d4af37" stroke-width="2"/>
+                    <line x1="100%" y1="0" x2="50%" y2="60%" stroke="#d4af37" stroke-width="2"/>
+                </svg>
+            </div>
+            
+            <!-- Sello (Wax Seal - Dorado brillante) -->
+            <div id="envelope-seal" class="absolute top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-40 w-16 h-16 bg-gradient-to-br from-[#f3c832] to-[#b38728] border-2 border-[#8a6822] rounded-full flex items-center justify-center shadow-lg transition-opacity duration-300">
+                <div class="w-12 h-12 rounded-full border border-[#8a6822]/50 flex items-center justify-center">
+                    <span class="font-mono text-white font-bold text-lg drop-shadow-md">&lt;/&gt;</span>
+                </div>
+            </div>
+            
+            <!-- Texto parpadeante -->
+            <div id="click-text" class="absolute -bottom-12 left-0 w-full text-center text-[#d4af37] font-mono text-sm animate-pulse">
+                [ Click para abrir ]
+            </div>
+        </div>
+    </div>
+
+    <!-- Background Animation Canvas -->
+    <div id="binary-bg"></div>
+
+    <!-- Glow Effects -->
+    <div class="fixed top-1/4 left-1/4 w-96 h-96 bg-accent/20 rounded-full blur-[100px] -z-10 mix-blend-screen pointer-events-none"></div>
+    <div class="fixed bottom-1/4 right-1/4 w-96 h-96 bg-ugr/10 rounded-full blur-[100px] -z-10 mix-blend-screen pointer-events-none"></div>
+
+    <!-- Main Invitation Card Wrapper para entrada -->
+    <div id="main-wrapper" class="w-full max-w-3xl relative z-10 m-auto">
+        <!-- Main Invitation Card -->
+        <main class="glass-card rounded-2xl w-full max-w-3xl relative z-10 overflow-hidden animate-float">
+            
+            <!-- Mac/Terminal Window Header -->
+            <header class="bg-gray-900/80 px-4 py-3 flex items-center justify-between border-b border-gray-700/50">
+                <div class="flex space-x-2">
+                    <div class="w-3 h-3 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.6)]"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
+                </div>
+                <div class="text-xs font-mono text-gray-500 text-center absolute left-1/2 -translate-x-1/2">
+                    bash - graduation_protocol.sh
+                </div>
+            </header>
+
+            <!-- Card Content -->
+            <div class="p-6 sm:p-12">
+                
+                <!-- Initialization Sequence -->
+                <div class="font-mono text-sm sm:text-base text-primary mb-8 inline-block">
+                    <p class="typewriter-text">> ./deploy_future.sh --force</p>
+                </div>
+
+                <!-- Titles -->
+                <div class="text-center mb-10">
+                    <p class="font-mono text-accent mb-4 tracking-widest text-sm uppercase">&lt; Class of 2022_2026 /&gt;</p>
+                    
+                    <!-- Contenedor relativo para poder colocar el gorrito encima -->
+                    <div class="relative inline-block">
+                        <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold gold-gradient mb-4 leading-tight relative z-10 pr-6 sm:pr-8">
+                            Ingeniería<br>Informática
+                        </h1>
+                        
+                        <!-- Gorrito de graduación SVG -->
+                        <div class="absolute -top-5 right-0 sm:-top-7 sm:right-0 text-yellow-500 w-12 h-12 sm:w-16 sm:h-16 transform rotate-[15deg] z-20 drop-shadow-[0_0_12px_rgba(234,179,8,0.4)] animate-bounce-slight">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M11.7 2.805a.75.75 0 01.6 0A60.65 60.65 0 0122.83 8.72a.75.75 0 01-.231 1.337 49.949 49.949 0 00-9.902 3.912l-.003.002c-.114.06-.227.119-.34.18a.751.751 0 01-.707 0A50.88 50.88 0 007.5 12.173v-.224c0-.131.067-.248.172-.311a54.615 54.615 0 014.653-2.52.75.75 0 00-.65-1.352 56.123 56.123 0 00-4.78 2.589 1.858 1.858 0 00-.859 1.228 49.803 49.803 0 00-4.634-1.527.75.75 0 01-.231-1.337A60.653 60.653 0 0111.7 2.805z" />
+                                <path d="M13.06 15.473a48.45 48.45 0 017.666-3.282c.134 1.414.22 2.843.255 4.284a.75.75 0 01-.46.711 47.87 47.87 0 00-8.105 4.342.75.75 0 01-.832 0 47.87 47.87 0 00-8.104-4.342.75.75 0 01-.461-.71c.035-1.442.121-2.87.255-4.286A48.4 48.4 0 016 13.18v1.27a1.5 1.5 0 00-.14 2.508c-.09.38-.222.753-.397 1.11.452.213.901.434 1.346.66a6.727 6.727 0 00.551-1.607 1.5 1.5 0 00.14-2.67v-.645a48.549 48.549 0 013.44 1.667 2.25 2.25 0 002.12 0z" />
+                                <path d="M4.462 19.462c.42-.419.753-.89 1-1.395.453.214.902.435 1.347.662a6.742 6.742 0 01-1.286 1.794.75.75 0 01-1.06-1.06z" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <h2 class="font-serif text-xl sm:text-2xl text-gray-300 tracking-wide uppercase mt-2">
+                        Universidad de Granada
+                    </h2>
+                </div>
+
+                <!-- Main Message -->
+                <div class="bg-dark/50 border border-gray-700/50 rounded-lg p-6 mb-10 relative group">
+                    <div class="absolute -top-3 left-4 bg-dark px-2 font-mono text-xs text-gray-400">/** Mensaje_del_Sistema **/</div>
+                    <p class="text-gray-300 leading-relaxed text-center font-light">
+                        Tras miles de líneas de código, incontables tazas de café y 
+                        excepciones no controladas, nuestro proyecto universitario más importante 
+                        está listo para pasar a <strong>producción</strong>. <br><br>
+                        Estás invitado al despliegue final de nuestra carrera.
+                    </p>
+                </div>
+
+                <!-- Details Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 font-mono text-xs sm:text-sm mb-12">
+                    
+                    <!-- Date Object -->
+                    <div class="bg-gray-800/30 p-4 sm:p-5 rounded-lg border border-gray-700/30 hover:border-accent/50 transition-colors overflow-hidden">
+                        <div class="overflow-x-auto custom-scrollbar pb-2 whitespace-nowrap">
+                            <span class="text-pink-400">const</span> <span class="text-blue-300">evento</span> = {
+                            <div class="pl-4 mt-2 space-y-1 text-gray-300">
+                                <span class="text-accent">fecha:</span> <span class="text-green-300">"Sábado, 13 Jun 2026"</span>,
+                                <br>
+                                <span class="text-accent">hora:</span> <span class="text-purple-300">11:00</span> <span class="text-gray-500">// UTC+2</span>
+                            </div>
+                            };
+                        </div>
+                    </div>
+
+                    <!-- Location Object (Clickable) -->
+                    <div onclick="window.open('https://www.google.com/maps/search/?api=1&query=Palacio+de+Congresos+de+Granada', '_blank')" class="bg-gray-800/30 p-4 sm:p-5 rounded-lg border border-gray-700/30 hover:border-accent/50 hover:bg-gray-800/60 cursor-pointer transition-all hover:-translate-y-1 group relative overflow-hidden">
+                        <!-- Map Icon that appears on hover -->
+                        <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                        </div>
+                        
+                        <div class="overflow-x-auto custom-scrollbar pb-2 whitespace-nowrap relative z-0">
+                            <span class="text-pink-400">let</span> <span class="text-blue-300">ubicacion</span> = {
+                            <div class="pl-4 mt-2 space-y-1 text-gray-300">
+                                <span class="text-accent">venue:</span> <span class="text-yellow-300">"Palacio de Congresos"</span>,
+                                <br>
+                                <span class="text-accent">sala:</span> <span class="text-yellow-300">"Federico García Lorca"</span>,
+                                <br>
+                                <span class="text-accent">ciudad:</span> <span class="text-yellow-300">"Granada"</span>
+                            </div>
+                            };
+                        </div>
+                    </div>
+
+                    <!-- Dress code / Extra -->
+                    <div class="bg-gray-800/30 p-4 sm:p-5 rounded-lg border border-gray-700/30 hover:border-accent/50 transition-colors md:col-span-2 overflow-hidden">
+                        <div class="overflow-x-auto custom-scrollbar pb-2 whitespace-nowrap">
+                            <span class="text-pink-400">import</span> { <span class="text-yellow-200">DressCode</span> } <span class="text-pink-400">from</span> <span class="text-green-300">'./etiqueta'</span>;
+                            <div class="mt-2 text-gray-300">
+                                <span class="text-accent">DressCode</span>.<span class="text-blue-300">set</span>(<span class="text-green-300">"Gala Elegante"</span>); <span class="text-gray-500 ml-2">// Hoy dejamos las sudaderas en casa</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Action Button -->
+                <div class="text-center">
+                    <button onclick="confirmarAsistencia()" class="group relative inline-flex items-center justify-center px-8 py-4 font-mono text-base font-bold text-dark bg-primary rounded-lg overflow-hidden transition-all hover:scale-105 hover:shadow-[0_0_20px_rgba(74,222,128,0.4)] focus:outline-none">
+                        <span class="absolute w-0 h-0 transition-all duration-500 ease-out bg-white rounded-full group-hover:w-56 group-hover:h-56 opacity-10"></span>
+                        <span class="relative flex items-center gap-2" id="btn-text">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            Confirmar_Asistencia()
+                        </span>
+                    </button>
+                    <div id="status-msg" class="h-auto mt-4 text-sm font-mono text-accent opacity-0 transition-opacity"></div>
+                </div>
+                
+                <div class="mt-10 text-center border-t border-gray-700/50 pt-6">
+                    <p class="font-mono text-xs text-gray-500">System.exit(0); // Nos vemos allí</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+
+        // --- Animación del Sobre y Confeti ---
+        function openEnvelope() {
+            if(window.envelopeOpened) return; // Evitar múltiples clics
+            window.envelopeOpened = true;
+
+            const flap = document.getElementById('envelope-flap');
+            const seal = document.getElementById('envelope-seal');
+            const clickText = document.getElementById('click-text');
+            const cardPreview = document.getElementById('card-preview');
+            const screen = document.getElementById('envelope-screen');
+            const mainWrapper = document.getElementById('main-wrapper');
+            
+            // 1. Ocultar sello y texto
+            seal.style.opacity = '0';
+            clickText.style.opacity = '0';
+            
+            // 2. Abrir solapa
+            flap.classList.add('flap-open');
+            
+            // 3. Asomar la tarjeta un poco
+            setTimeout(() => {
+                cardPreview.style.transform = 'translateY(-30px)';
+            }, 400);
+            
+            // 4. ¡Lanzar Confeti!
+            setTimeout(() => {
+                // Confeti central potente
+                confetti({
+                    particleCount: 150,
+                    spread: 100,
+                    origin: { y: 0.6 },
+                    colors: ['#D50032', '#eab308', '#4ade80', '#ffffff'] // UGR, Dorado, Tech, Blanco
+                });
+                
+                // Ráfagas laterales sostenidas
+                var duration = 1.5 * 1000;
+                var end = Date.now() + duration;
+
+                (function frame() {
+                    confetti({
+                        particleCount: 5,
+                        angle: 60,
+                        spread: 55,
+                        origin: { x: 0 },
+                        colors: ['#D50032', '#eab308']
+                    });
+                    confetti({
+                        particleCount: 5,
+                        angle: 120,
+                        spread: 55,
+                        origin: { x: 1 },
+                        colors: ['#D50032', '#eab308']
+                    });
+
+                    if (Date.now() < end) {
+                        requestAnimationFrame(frame);
+                    }
+                }());
+            }, 600);
+            
+            // 5. Deslizar el sobre hacia abajo y revelar la invitación grande
+            setTimeout(() => {
+                screen.classList.add('envelope-out');
+                setTimeout(() => {
+                    screen.style.display = 'none';
+                    mainWrapper.classList.add('reveal');
+                    // Aseguramos que la vista se desplaza hasta arriba del todo
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }, 800); // Tiempo en el que el sobre baja y desaparece
+            }, 2500); // Tiempo total para disfrutar del confeti antes de mostrar la tarjeta
+        }
+
+        // Binary Rain Background Effect
+        const canvas = document.getElementById('binary-bg');
+        let binaryString = '';
+        
+        function generateBinary() {
+            const width = Math.floor(window.innerWidth / 15);
+            const height = Math.floor(window.innerHeight / 20);
+            binaryString = '';
+            
+            for (let i = 0; i < height; i++) {
+                for (let j = 0; j < width; j++) {
+                    binaryString += Math.random() > 0.5 ? '1 ' : '0 ';
+                }
+                binaryString += '<br>';
+            }
+            canvas.innerHTML = binaryString;
+        }
+
+        generateBinary();
+        setInterval(() => {
+            if(Math.random() > 0.7) generateBinary();
+        }, 1000);
+
+        window.addEventListener('resize', generateBinary);
+
+        // Interactive Button conected to Form
+        function confirmarAsistencia() {
+            const btn = document.querySelector('button');
+            const btnText = document.getElementById('btn-text');
+            const msg = document.getElementById('status-msg');
+            
+            // 1. Animación de carga
+            btnText.innerHTML = 'Resolviendo_DNS...';
+            btn.classList.replace('bg-primary', 'bg-accent');
+            
+            setTimeout(() => {
+                // 2. ⚠️ PEGA AQUÍ EL ENLACE DE TU GOOGLE FORM ⚠️
+                const formURL = "https://forms.gle/Y7fRGmHARU1DoW147"; 
+                
+                // Abre el formulario en una nueva pestaña (descomenta la siguiente línea cuando pongas el enlace real)
+                window.open(formURL, '_blank');
+                
+                // 3. Estado de éxito
+                btnText.innerHTML = 'Redirección_302_Completada';
+                btn.classList.replace('bg-accent', 'bg-green-600');
+                btn.classList.remove('text-dark');
+                btn.classList.add('text-white');
+                
+                msg.innerHTML = "> GET /formulario_asistencia HTTP/1.1 <br> > Redirigiendo a zona segura... Si tu navegador ha bloqueado la pestaña, permite las ventanas emergentes.";
+                msg.style.opacity = "1";
+            }, 1200);
+        }
+    </script>
+</body>
+</html>
